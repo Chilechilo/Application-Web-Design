@@ -1,0 +1,33 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\Product;
+use App\Models\Categoria;
+
+class ProductController extends Controller
+{
+    public function index()
+    {
+        $categorias = Categoria::all();
+        return view('products.index', compact('categorias'));
+    }
+
+    public function store(Request $request)
+    {
+        Product::create([
+            'nombre' => $request->nombre,
+            'precio' => $request->precio,
+            'categoria_id' => $request->categoria_id
+        ]);
+
+        return redirect()->route('products.show');
+    }
+
+    public function show()
+    {
+        $products = Product::with('categoria')->get();
+        return view('products.show', compact('products'));
+    }
+}
